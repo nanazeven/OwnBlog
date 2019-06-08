@@ -1,0 +1,16 @@
+<div class="alert alert-danger hidden" role="alert" id="reg_message"></div>
+<div class="form-group" >
+    <form method="post" action="{% url 'accounts:register' %}" enctype="multipart/form-data" id="regForm">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.errors }}
+                {{ field.label_tag }} {{ field }}
+                {% if field.help_text %}
+                    <p class="help">{{ field.help_text|safe }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <input type="submit" class="hidden" value="reg" id="regSubmit">
+    </form>
+</div>

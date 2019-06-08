@@ -1,0 +1,77 @@
+
+{% if contacts %}
+
+    <div class="comments-content">
+        {% for comment in contacts.object_list %}
+            {% if not comment.parent %}
+                <div class="media" data-id="{{ comment.id }}">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object img-circle" src="/static/img/tako.jpg"
+                                 alt="{{ comment.author.username }}">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <p class="media-heading" user-id="{{ comment.author.id }}">
+                            <a href="#">{{ comment.author.username }}</a>
+                        </p>
+                        <p id="ctext">{{ comment.text }}</p>
+                        <p class="media-heading ">
+                            <span>{{ comment.pub_time|date:"Y-m-d H:i" }}</span>
+                            <a comm_id="{{ comment.id }}" class="showSubCommentForm">回复</a>
+                            {% if comment.author.id == request.user.id %}
+                                <a class="pull-right" href="{% url 'comments:del_comment' comment.id %}"
+                                   id="delComment">删除</a>
+                            {% endif %}
+                        </p>
+                        {% for sub_comment in  comment.comment_set.all %}
+                            <div class="media" data-id="{{ sub_comment.id }}">
+                                <div class="media-left">
+                                    <a href="#">
+                                        <img class="media-object img-circle" style="max-width: 45px;max-height: 45px"
+                                             src="/static/img/tako.jpg" alt="{{ sub_comment.author.username }}">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <p class="media-heading" user-id="{{ sub_comment.author.id }}">
+                                        <a href="#">{{ sub_comment.author.username }}</a>:
+                                        {{ sub_comment.text }}
+                                    </p>
+                                    <p class="media-heading">
+                                        <span>{{ sub_comment.pub_time|date:"Y-m-d H:i" }}</span>
+                                        <a comm_id="{{ sub_comment.id }}" parent_id="{{ comment.id }}"
+                                           class="showSubCommentForm">回复</a>
+                                        {% if sub_comment.author.id == request.user.id %}
+                                            <a class="pull-right" href="{% url 'comments:del_comment' sub_comment.id %}"
+                                               id="delComment">删除</a>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <div class="media hidden" id="sub_content_{{ comment.id }}"></div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <nav>
+        <ul class="pager">
+            {% if contacts.has_previous %}
+                <li class="previous"><a href="{% url 'comments:page_comment' curr_article_id contacts.previous_page_number %}" class="load_page"><span
+                        aria-hidden="true">&larr;</span> Previous</a></li>
+            {% else %}
+                <li class="previous disabled"><a><span aria-hidden="true">&larr;</span> Previous</a></li>
+            {% endif %}
+            {% if contacts.has_next %}
+                <li class="next"><a href="{% url 'comments:page_comment' curr_article_id contacts.next_page_number %}" class="load_page">Next <span
+                        aria-hidden="true">&rarr;</span></a>
+                    {% else %}
+                <li class="next disabled"><a>Next <span aria-hidden="true">&rarr;</span></a>
+            {% endif %}
+            </li>
+        </ul>
+    </nav>
+{% else %}
+    <div class="page-header"><h1>没有更多信息 </h1></div>
+{% endif %}

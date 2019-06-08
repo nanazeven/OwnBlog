@@ -1,0 +1,15 @@
+<div class="comments-form row">
+    <form action="{% url 'comments:post_comment' article.id %}" id="commentForm">
+        <div class="col-xs-1"><img class="img-circle" src="/static/img/tako.jpg" alt="..."></div>
+
+        <div class="col-xs-10">
+            <textarea name="text" id="" cols="80" rows="5" class="text-txt"
+                      placeholder="请自觉遵守互联网相关的政策法规，严禁发布色情、暴力、反动的言论。" ></textarea>
+            {% csrf_token %}
+        </div>
+        <div class="col-xs-1">
+            <button type="submit" class="mybtn" id="postComment">发表评论</button>
+        </div>
+    </form>
+
+</div>

@@ -1,0 +1,117 @@
+{% extends 'blog/base.html' %}
+{% block title %}detail{% endblock %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-xs-12" id="article_info" data-id="{{ article.id }}">
+            <h2>{{ article.title }}</h2>
+
+            <span class="text-right date-author-views">{{ article.pub_time|date:"Y-m-d" }} / {{ article.author }} / {{ article.views }}views</span>
+
+        </div>
+        <div class="col-xs-12">{{ article.body | safe }}</div>
+        <div class="col-xs-12">
+            <div class="alert alert-danger hidden" role="alert" id="result">评论失败！</div>
+        </div>
+        <div class="col-xs-12">
+            <div class="page-header">
+                <h1>评论：
+                    {% if request.user.is_authenticated %}
+                        <small class="pull-right">current_user：
+                            <a href="{% url 'accounts:profile' request.user.id %}"
+                               id="toModify">{{ request.user.username }}</a>
+                        </small>
+                    {% endif %}
+                </h1>
+                {% if request.user.is_authenticated %}
+                    <div class="modal fade" id="modify_modal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">你的信息：</div>
+                                <div class="modal-body">
+                                    <ul class="nav">
+                                        <li>username: {{ request.user.username }}</li>
+                                        <li>email: {{ request.user.email }}</li>
+                                    </ul>
+                                </div>
+                                <div class="modal-footer">
+                                    <button href="{% url 'accounts:pwd_change' request.user.id %}"
+                                            class="btn btn-primary" id="toPwdChange">Change Passwrd
+                                    </button>
+                                    <button class="btn btn-primary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-xs-12">
+            {% if request.user.is_authenticated %}
+                {% include 'comments/comment_form.html' %}
+            {% else %}
+                <div class="alert alert-danger" role="alert">
+                    请先<a id="toLogin">登录</a>后发表评论。没有账号欢迎 <a id="toReg">注册</a>
+                </div>
+                {#.modal>.modal-dialog>.modal-content>.modal-header+.modal-body+.modal-footer#}
+                <div class="modal fade" id="login_modal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">请登录</div>
+                            <div class="modal-body"></div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" id="login_submit">Login</button>
+                                <button class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="reg_modal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">请注册</div>
+                            <div class="modal-body"></div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" id="reg_submit">Register</button>
+                                <button class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-xs-12" id="comment_list">
+            {% include 'comments/comment_list.html' %}
+        </div>
+    </div>
+{% endblock main %}
+
+{% block right_menu %}
+    <div class="affix" data-spy="affix" data-offset-top="150" data-offset-bottom="160" id="right_nav">
+        <ul class="nav scrollspy">
+            {% for l1 in toc %}
+                <li>
+                    <a href="#{{ l1.id }}">{{ l1.name }}</a>
+                    {% for l2 in l1.children %}
+                        <ul class="nav">
+                            <li>
+                                <a href="#{{ l2.id }}">{{ l2.name }}</a>
+                                {% for l3 in l2.children %}
+                                    <ul class="nav">
+                                        <li>
+                                            <a href="#{{ l3.id }}">{{ l3.name }}</a>
+                                        </li>
+                                    </ul>
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    {% endfor %}
+                </li>
+            {% endfor %}
+            <li>
+                <a class='back-to-top' href="#top">返回顶部</a>
+            </li>
+        </ul>
+
+    </div>
+{% endblock right_menu %}

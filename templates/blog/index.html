@@ -1,0 +1,42 @@
+{% extends 'blog/base.html' %}
+{% block title %}主页{% endblock %}
+{% block main %}
+    {% for article in article_list %}
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h1 class="panel-title"><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h1>
+                </div>
+                <div class="panel-body">
+                    <p class="lead">{{ article.body }}</p>
+                </div>
+                <div class="panel-heading clearfix">
+                    <div class="article_info pull-left">
+                        {{ article.author }} / {{ article.pub_time |date:"Y-m-d" }}
+                        {% for t in article.tags.all %}
+                            / {{ t.name }}
+                        {% endfor %}
+                    </div>
+                    <div class="article_info pull-right">{{ article.views }} views</div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <h2>无数据</h2>
+    {% endfor %}
+{% endblock main %}
+{% block right_menu %}
+    <ul class="list-group">
+        {% for year,d_month in archives.items %}
+            <li class="list-group-item"><a href="{% url 'blog:year_archives' year %}">{{ year }}</a></li>
+            <ul>
+                {% for month,count in d_month.items %}
+                    <li class="list-group-item"><a href="{% url 'blog:month_archives' year month %}">{{ month }}月</a>
+                        <span class="badge">{{ count }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    </ul>
+
+{% endblock right_menu %}
