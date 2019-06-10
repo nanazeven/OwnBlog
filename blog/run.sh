@@ -1,1 +1,1 @@
-python manage.py makemigrations && python manage.py migrate && gunicorn blog.wsgi:application -c gunicorn.conf
+python manage.py makemigrations && python manage.py migrate && gunicorn django_blog.wsgi:application -c gunicorn.conf
