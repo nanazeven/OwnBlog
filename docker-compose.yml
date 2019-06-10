@@ -1,0 +1,37 @@
+version: 3
+service: 
+  db: 
+    image: mysql
+    environment:
+       MYSQL_DATABASE: django_blog
+       MYSQL_ROOT_PASSWORD: nana
+    volumes:
+      - /tmp/mysql_backup:/var/lib/mysql
+    restart: always
+
+  web:
+    build: ./blog
+    ports: 
+      - '8000:8000'
+    volumes:
+      - ./blog:/blog
+      - /tmp/django_blog_logs:/tmp
+    links: 
+      - db
+    depends_on:
+      - db
+    command: bash ./run.sh
+    restart: always
+
+  nginx:
+    build: ./nginx
+    ports:
+      - '80:80'
+    volumes:
+      - ./blog/static:/usr/share/nginx/html/static
+      - ./blog/media:/usr/share/nginx/html/media
+    links:
+      - web
+    depends_on:
+      - web
+    restart: always
