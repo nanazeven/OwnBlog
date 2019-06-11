@@ -3,8 +3,10 @@ services:
   db: 
     image: mysql
     environment:
-       MYSQL_DATABASE: django_blog
-       MYSQL_ROOT_PASSWORD: nana
+      MYSQL_DATABASE: django_blog
+      MYSQL_ROOT_PASSWORD: nana
+    ports:
+      - '3306:3306'
     volumes:
       - /tmp/mysql_backup:/var/lib/mysql
     restart: always
