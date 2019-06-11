@@ -1,5 +1,6 @@
 # OwnBlog
 Build with Django
 
-## docker-compose build
-## docker-compose up -d
+# USE 
+- docker-compose build
+- docker-compose up -d
