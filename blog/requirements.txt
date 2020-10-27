@@ -9,4 +9,4 @@ Pygments==2.4.0
 PyMySQL==0.9.3
 pytz==2019.1
 sqlparse==0.3.0
-cryptography==2.6.1
+cryptography==3.2
